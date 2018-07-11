@@ -7,6 +7,7 @@
           <li class="collection-item">Position: {{position}}</li>
         </ul>
         <router-link to="/" class="btn grey">Back</router-link>
+        <button @click="deleteEmployee" class="btn red">Delete</button>
     </div>
 </template>
 
@@ -54,7 +55,19 @@
                     this.position = doc.data().position
                   })
               })
-            }
+          },
+
+          deleteEmployee () {
+              if (confirm('Are you sure?')) {
+                db.collection('employees').where('employee_id', '==', this.$route.params.employee_id)
+                  .get().then(querySnapShot => {
+                      querySnapShot.forEach((doc) => {
+                      doc.ref.delete();
+                      this.$router.push('/')
+                    })
+                  })
+              }
+          }
         }
     }
 </script>
